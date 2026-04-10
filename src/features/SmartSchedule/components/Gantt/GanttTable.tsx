@@ -164,10 +164,34 @@ export const GanttTable: React.FC<GanttTableProps> = ({
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div className="w-[60px] flex items-center justify-center">
-                                                        <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400 border border-white">
-                                                            {assignee?.avatar || '--'}
+                                                    <div className="w-[60px] flex items-center justify-center relative group/assignee">
+                                                        <select
+                                                            className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full disabled:cursor-not-allowed"
+                                                            value={task.assigneeId || ''}
+                                                            disabled={emailStatusMap[task.id] === 'sending'}
+                                                            onChange={(e) => updAssignee(task.id, e.target.value || null)}
+                                                        >
+                                                            <option value="">Sin Asignar</option>
+                                                            {TEAM_MEMBERS.map(m => (
+                                                                <option key={m.id} value={m.id}>{m.name}</option>
+                                                            ))}
+                                                        </select>
+                                                        <div 
+                                                            className={`w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black border transition-all ${
+                                                                emailStatusMap[task.id] === 'sending' ? 'animate-pulse scale-90 opacity-50' : 'group-hover/assignee:scale-110 group-hover/assignee:shadow-md'
+                                                            } ${emailStatusMap[task.id] === 'error' ? 'border-red-500 bg-red-50' : 'border-white'}`}
+                                                            style={{ 
+                                                                backgroundColor: emailStatusMap[task.id] === 'sending' ? '#94A3B8' : (assignee?.color || '#F1F5F9'),
+                                                                color: (assignee || emailStatusMap[task.id] === 'sending') ? 'white' : '#94A3B8'
+                                                            }}
+                                                        >
+                                                            {emailStatusMap[task.id] === 'sending' ? '...' : (assignee?.avatar || '--')}
                                                         </div>
+                                                        {emailStatusMap[task.id] === 'sent' && (
+                                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white shadow-sm z-20">
+                                                                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div className="w-[60px] flex items-center justify-center">
                                                         <span className="text-[9px] font-black text-slate-600">{task.progress}%</span>

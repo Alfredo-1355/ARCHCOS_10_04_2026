@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from 'react';
-import { Category, TaskRow, TaskStatus } from '../../../../types/dashboard';
+import { Category, TaskRow, TaskStatus } from '../../../types/dashboard';
 import { uid } from '../utils/helpers';
 import { ICON_MAP, STATUS_ORDER } from '../constants';
 
@@ -160,3 +160,4 @@ export const useScheduleState = (initialCategories: Category[]) => {
     updateTaskAssignee
   };
 };
+

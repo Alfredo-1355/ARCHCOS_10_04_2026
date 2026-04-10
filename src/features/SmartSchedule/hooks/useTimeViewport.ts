@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Category, TimeColumn } from '../../../../types/dashboard';
+import { Category, TimeColumn } from '../../../types/dashboard';
 
 export const useTimeViewport = (initialScale: 'weeks' | 'days' = 'weeks') => {
   const [timeScale, setTimeScale] = useState<'weeks' | 'days'>(initialScale);
@@ -66,3 +66,4 @@ export const useTimeViewport = (initialScale: 'weeks' | 'days' = 'weeks') => {
       projectCategories
   };
 };
+

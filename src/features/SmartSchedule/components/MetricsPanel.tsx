@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { InfoChip, MiniRing } from './LayoutAtoms';
-import { PHASES, getPhase } from '../utils';
+import { PHASES, getPhase } from '../constants';
 
 interface Props {
   allTasks: any[];

@@ -353,14 +353,22 @@ export const useSmartSchedule = (project?: Project): UseSmartScheduleReturn => {
 
     // Open Outlook automatically — zero popups
     if (assigneeId && memberEmail) {
-      sendAssignmentMailto({
-        recipientName: memberName!,
-        recipientEmail: memberEmail,
-        taskName: task.name,
-        categoryName: cat?.name || 'Disciplina',
-        projectLabel: `[${project?.id || 'ID'}] ${project?.address || ''}`,
-        assignorName: user?.name || 'ARCHCOS Admin',
-      });
+      setEmailStatusMap(prev => ({ ...prev, [planId]: 'sending' }));
+      try {
+        sendAssignmentMailto({
+          recipientName: memberName!,
+          recipientEmail: memberEmail,
+          taskName: task.name,
+          categoryName: cat?.name || 'Disciplina',
+          projectLabel: `[${project?.id || 'ID'}] ${project?.address || ''}`,
+          assignorName: user?.name || 'ARCHCOS Admin',
+        });
+        setEmailStatusMap(prev => ({ ...prev, [planId]: 'sent' }));
+        // Reset to idle after 3s
+        setTimeout(() => setEmailStatusMap(prev => ({ ...prev, [planId]: 'idle' })), 3000);
+      } catch (err) {
+        setEmailStatusMap(prev => ({ ...prev, [planId]: 'error' }));
+      }
     }
   }, [categories, setCats, user, project]);
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Category, TaskRow, TimeColumn } from '../../../../types/dashboard';
+import { Category, TaskRow, TimeColumn } from '../../../types/dashboard';
 import { addDays } from '../utils/helpers';
 
 export const useScheduleMetrics = (
@@ -88,3 +88,4 @@ export const useScheduleMetrics = (
         executionMetrics
     };
 };
+

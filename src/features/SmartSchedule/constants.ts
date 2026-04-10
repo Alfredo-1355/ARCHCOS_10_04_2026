@@ -68,3 +68,17 @@ export const TEAM_MEMBERS = [
   { id: 'alfredo_reyes', name: 'Alfredo Reyes', avatar: 'AR', email: 'areyes@archcos.com', color: '#EF4444' },
   { id: 'ruben_gaytan', name: 'Ruben Gaytan', avatar: 'RG', email: 'rgaytan@archcos.com', color: '#14B8A6' }
 ];
+
+// --- LEGACY COMPAT: alias used by MetricsPanel ---
+export const PHASES = PHASE_CONFIG;
+
+/**
+ * Returns the current phase object based on the current week index and total weeks.
+ */
+export function getPhase(currentWi: number, totalWeeks: number) {
+  const progress = totalWeeks > 0 ? currentWi / totalWeeks : 0;
+  // Map progress 0-1 to the 4 PHASE_CONFIG entries
+  const idx = Math.min(PHASE_CONFIG.length - 1, Math.floor(progress * PHASE_CONFIG.length));
+  return PHASE_CONFIG[idx];
+}
+

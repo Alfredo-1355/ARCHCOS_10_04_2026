@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Project, ProjectSchedule, Category } from '../../../../types/dashboard';
+import { Project, ProjectSchedule, Category } from '../../../types/dashboard';
 import { sanitizeSchedule, rehydrateSchedule } from '../utils/helpers';
 
 export interface SyncNotification {
@@ -78,3 +78,4 @@ export const useScheduleSync = (
 
     return { saveStatus };
 };
+

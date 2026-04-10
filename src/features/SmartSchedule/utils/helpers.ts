@@ -294,5 +294,10 @@ export function sendAssignmentMailto(payload: {
         payload.assignorName
     ));
 
-    window.location.href = `mailto:${payload.recipientEmail}?subject=${asunto}&body=${cuerpo}`;
+    // Programmatic Mailto — strictly headless
+    const mailtoUrl = `mailto:${payload.recipientEmail}?subject=${asunto}&body=${cuerpo}`;
+    const link = document.createElement('a');
+    link.href = mailtoUrl;
+    link.target = '_self'; // Opens the default client handler
+    link.click();
 }

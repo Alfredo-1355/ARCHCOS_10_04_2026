@@ -64,10 +64,20 @@ export interface TaskRow {
   id: string;
   name: string;
   type: "critical" | "refinement" | "review" | "milestone";
-  weeks: boolean[];
+  weeks: boolean[]; // Deprecated visual grid (legacy support)
   progress: number;
-  baselineWeeks?: boolean[];
+  baselineWeeks?: boolean[]; // Deprecated visual grid (legacy support)
+  
+  // New Single Source of Truth Model (Contiguous)
+  startDay?: number;    // Offset in days from Project Start
+  duration?: number;    // Total length in days
+  baselineStartDay?: number;
+  baselineDuration?: number;
+
   assigneeId?: string | null;
+  assigneeName?: string | null;
+  updatedAt?: string | null;
+  updatedBy?: string | null;
   zeroFloat?: boolean;
 }
 

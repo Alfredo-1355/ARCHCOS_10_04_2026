@@ -6,16 +6,25 @@
     - [x] Rename `blocks` -> `weeks`
     - [x] Rename `baselineBlocks` -> `baselineWeeks`
     - [/] Rename `assignee` -> `assigneeId` across components
-- [/] Fix missing imports and TypeScript errors
-    - [ ] Import `Week` type in SmartSchedule.tsx
-    - [ ] Fix `React` namespace in useSmartSchedule.ts
-    - [ ] Fix `undo` name error in AdvancedGanttChartWrapper.tsx
-- [ ] Verify data persistence to Firestore
-- [ ] Final verification with tsc
-- `[/]` Modificar `AdminDashboard.tsx` para inyectar la función de salvado `updateProject` al cronograma.
-- `[ ]` Base de Datos: Migrar `SmartScheduleView.tsx` para leer `project.smartSchedule` y crear un efecto `debounce` de autoguardado en Firebase.
-- `[ ]` Escala Temporal (UI): Agregar state `timeScale`, botón switch (Días/Semanas) y renderizado granular.
-- `[x]` Avatar & Asignación CVM: Añadir círculos de avatar con despliegue al doble clic y filtro de matriz de choques (semáforo rojo).
-- `[x]` HTML5 Drag & Drop Nativo: Permitir arrastrar filas libres entre categorías.
-- `[ ]` Motor de Eficiencia Paramétrica: Algoritmo RCPSP de nivelación en cascada.
-- `[ ]` Pruebas en el Entorno y Build.
+- [x] Phase 3: Manual Mailto & Stacking Fix
+    - [x] [MODIFY] Revert `utils.ts` to use `mailto:` (Outlook)
+    - [x] [MODIFY] `useSmartSchedule.ts`: trigger `mailto:` on selection
+    - [x] [MODIFY] `GanttTable.tsx`: Fix Z-Index stacking (Tooltip hidden by rows below)
+    - [x] [DELETE] Remove `EnvelopeStatus` icon logic
+- [x] Phase 4: Integration & Scale
+    - [x] [MODIFY] `SmartSchedule.tsx`: Connect to `ProjectContext`
+    - [x] [MODIFY] `useSmartSchedule.ts`: Implement debounced auto-save (3s) to Firebase
+    - [x] [MODIFY] `useSmartSchedule.ts`: Implement `timeScale` state and logic
+    - [x] [MODIFY] `SmartSchedule.tsx`: Add Scale Switch (Semanas/Días) UI
+    - [x] [MODIFY] `GanttTable.tsx`: Fix task map nesting syntax error
+- [x] Verification
+    - [x] Verify Outlook opens immediately on select
+    - [x] Verify Tooltip is visible over other rows
+    - [x] Verify Scale toggle updates Gantt grid labels
+- [ ] Modificar `AdminDashboard.tsx` para inyectar la función de salvado `updateProject` al cronograma.
+- [ ] Base de Datos: Migrar `SmartScheduleView.tsx` para leer `project.smartSchedule` y crear un efecto `debounce` de autoguardado en Firebase.
+- [ ] Escala Temporal (UI): Agregar state `timeScale`, botón switch (Días/Semanas) y renderizado granular.
+- [x] Avatar & Asignación CVM: Añadir círculos de avatar con despliegue al doble clic y filtro de matriz de choques (semáforo rojo).
+- [x] HTML5 Drag & Drop Nativo: Permitir arrastrar filas libres entre categorías.
+- [ ] Motor de Eficiencia Paramétrica: Algoritmo RCPSP de nivelación en cascada.
+- [ ] Pruebas en el Entorno y Build.

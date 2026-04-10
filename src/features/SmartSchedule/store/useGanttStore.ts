@@ -47,14 +47,7 @@ interface GanttState {
   tasks: GanttTask[];
   links: GanttLink[];
   
-  // Ephemeral State
-  nodePositions: Record<string, NodePosition>;
-  ghostLink: { sourceId: string; mouseX: number; mouseY: number } | null;
-  draggedTaskId: string | null;
-  selectedTaskIds: Set<string>;
-  isGenerating: boolean;
-  isHydrating: boolean;
-  activeProjectId: string | null;
+  drawing: { catId: string; taskId: string; startWi: number; currentWi: number } | null;
 
   // History (Temporal State)
   past: Snapshot[];
@@ -67,6 +60,7 @@ interface GanttState {
   
   setTasks: (tasks: GanttTask[]) => void;
   setLinks: (links: GanttLink[]) => void;
+  setDrawing: (d: { catId: string; taskId: string; startWi: number; currentWi: number } | null) => void;
   
   saveSnapshot: () => void;
   undo: () => void;
@@ -161,13 +155,7 @@ export const useGanttStore = create<GanttState>((set, get) => ({
   tasks: [],
   links: [],
   
-  nodePositions: {},
-  ghostLink: null,
-  draggedTaskId: null,
-  selectedTaskIds: new Set(),
-  isGenerating: false,
-  isHydrating: false,
-  activeProjectId: null,
+  drawing: null,
 
   past: [],
   future: [],
@@ -178,13 +166,15 @@ export const useGanttStore = create<GanttState>((set, get) => ({
     zenMode: active,
     // Cancel active interactions to prevent visual artifacts as per user rules
     ghostLink: null,
-    draggedTaskId: null 
+    draggedTaskId: null,
+    drawing: null
   }),
 
   setTimeScale: (scale) => set({ timeScale: scale }),
   
   setTasks: (tasks) => set({ tasks }),
   setLinks: (links) => set({ links }),
+  setDrawing: (d) => set({ drawing: d }),
   
   saveSnapshot: () => set(state => {
     const currentState: Snapshot = {

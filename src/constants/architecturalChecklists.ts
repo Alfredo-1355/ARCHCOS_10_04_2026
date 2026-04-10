@@ -1,5 +1,6 @@
-// src/features/ArchitecturalProgram/archcosChecklists.ts
+// src/constants/architecturalChecklists.ts
 // Official ARCHCOS quality checklists per drawing/plan name.
+// Relocated to shared constants to support both main project and standalone modules.
 
 export interface ChecklistSection {
   title: string;
@@ -493,20 +494,19 @@ export function renderChecklistText(drawingName: string, NL: string, TAB: string
   const checklist = getChecklist(drawingName);
 
   const lines: string[] = [
-    `${encodeURIComponent('────────────────────────────────────────────')}`,
-    `${encodeURIComponent(`📋 CHECKLIST DE REVISIÓN OBLIGATORIA: ${checklist.drawingName.toUpperCase()}`)}`,
-    `${encodeURIComponent('────────────────────────────────────────────')}`,
+    `────────────────────────────────────────────`,
+    `📋 CHECKLIST DE REVISIÓN OBLIGATORIA: ${checklist.drawingName.toUpperCase()}`,
+    `────────────────────────────────────────────`,
     ``,
   ];
 
   checklist.sections.forEach(section => {
-    lines.push(encodeURIComponent(section.title));
+    lines.push(section.title);
     section.items.forEach(item => {
-      lines.push(`${TAB}${encodeURIComponent(`[ ] ${item}`)}`);
+      lines.push(`${TAB}[ ] ${item}`);
     });
     lines.push('');
   });
 
   return lines.join(NL);
 }
-

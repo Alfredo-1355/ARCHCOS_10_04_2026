@@ -7,7 +7,6 @@ import NewProjectWizard from './features/NewProjectWizard/NewProjectWizard';
 import AssignmentModule from './features/AssignmentModule/AssignmentModule';
 import ClientConsultPage from './features/ClientConsultPage/ClientConsultPage';
 import ProjectDetail from './features/Projects/ProjectDetail';
-import ArchitecturalProgram from './features/ArchitecturalProgram/ArchitecturalProgram';
 import ErrorBoundary from './components/dashboard/ErrorBoundary';
 
 // --- CONTEXTS ---
@@ -69,14 +68,6 @@ const Router = ({ currentPath, navigate }: { currentPath: string, navigate: (pat
         return (
             <DashboardLayout navigate={navigate}>
                 <SmartSchedule navigate={navigate} />
-            </DashboardLayout>
-        );
-    }
-
-    if (currentPath === '#/dashboard/programa') {
-        return (
-            <DashboardLayout navigate={navigate}>
-                <ArchitecturalProgram />
             </DashboardLayout>
         );
     }

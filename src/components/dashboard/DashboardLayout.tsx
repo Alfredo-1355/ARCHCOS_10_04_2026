@@ -91,13 +91,6 @@ const DashboardLayout = ({ children, navigate }: { children: React.ReactNode, na
                                     </div>
                                     <span className="font-bold text-[11px] uppercase tracking-widest">Smart Schedule</span>
                                 </button>
-                                <button onClick={() => navigate('#/dashboard/programa')} 
-                                    className={`${baseNavClass} ${isActive('#/dashboard/programa') ? activeNavClass + ' border-purple-400' : inactiveNavClass}`}>
-                                    <div className={`p-2 rounded-lg transition-all duration-300 ${isActive('#/dashboard/programa') ? 'bg-purple-100 shadow-inner' : 'bg-transparent group-hover:bg-arch-border/50'}`}>
-                                        <Icons.Transform className={`w-5 h-5 transition-transform duration-500 group-hover:scale-110 ${isActive('#/dashboard/programa') ? 'text-purple-600' : ''}`} />
-                                    </div>
-                                    <span className="font-bold text-[11px] uppercase tracking-widest">Programa Arq.</span>
-                                </button>
                             </div>
                         </div>
                     </nav>

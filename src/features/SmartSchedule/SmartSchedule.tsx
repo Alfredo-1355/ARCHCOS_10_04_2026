@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Search, Info, RefreshCw, Zap, LayoutGrid } from "lucide-react";
+import { Search, Info, RefreshCw, Zap, LayoutGrid, CheckCircle2, Plus, CalendarDays, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 // Contexts & Hooks
@@ -10,10 +10,9 @@ import { useSmartSchedule } from "./useSmartSchedule";
 import { GanttHeader } from './components/Gantt/GanttHeader';
 import { GanttSidebar } from './components/Gantt/GanttSidebar';
 import { GanttTable } from './components/Gantt/GanttTable';
-import { AssignmentNotifyToast } from './components/AssignmentNotifyToast';
 
 // Local Utils
-import { TEAM_MEMBERS, sendAssignmentEmail } from "./utils";
+import { TEAM_MEMBERS } from "./constants";
 
 const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ navigate }) => {
   const { projects: allProjects, activeProjectId, setActiveProjectId } = useProjects();
@@ -29,9 +28,12 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
     startDate, setStartDate, search, setSearch, zoom, setZoom,
     categories, weeks, statuses, wkLoad, todayWi,
     COL_W, efficiencyScore, executionMetrics,
-    addWeek, addTask, addCat, toggleWk, updAssignee, toggleType, cycleStatus, gen,
-    generating, statusMsg, saveStatus, sCurve, assignToast, setAssignToast, toggleExpand,
-    drag, setDrag, onMouseUp, hovWk, setHovWk
+    addWeek, addTask, addCat, updTimeframe, updAssignee, toggleType, cycleStatus, gen,
+    generating, statusMsg, saveStatus, sCurve, toggleExpand,
+    drag, setDrag, onMouseUp, hovWk, setHovWk,
+    timeScale, toggleScale,
+    notification, setNotification,
+    emailStatusMap
   } = hook;
 
   // --- Search Logic ---
@@ -43,9 +45,6 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
       tasks: c.tasks.filter(t => t.name.toLowerCase().includes(q))
     })).filter(c => c.tasks.length > 0 || c.name.toLowerCase().includes(q));
   }, [categories, search]);
-
-  const [emailSending, setEmailSending] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
 
   return (
     <div 
@@ -114,11 +113,26 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
                         <Search size={18} className="text-slate-300 group-focus-within:text-blue-500 transition-colors" />
                         <input 
                             type="text" 
-                            placeholder="Encontrar plano, entregable o categoría..." 
+                            placeholder={`Buscando en [${project?.id || 'ID'}] ${project?.address || 'el proyecto'}...`}
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             className="bg-transparent text-sm font-black focus:outline-none w-full placeholder:text-slate-300"
                         />
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-white shadow-sm">
+                        <button 
+                            onClick={() => timeScale !== 'weeks' && toggleScale()}
+                            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${timeScale === 'weeks' ? 'bg-slate-900 text-white shadow-lg scale-105' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            Semanas
+                        </button>
+                        <button 
+                            onClick={() => timeScale !== 'days' && toggleScale()}
+                            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${timeScale === 'days' ? 'bg-slate-900 text-white shadow-lg scale-105' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            Días
+                        </button>
                     </div>
                 </div>
 
@@ -126,13 +140,14 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
                     categories={filtered}
                     weeks={weeks}
                     statuses={statuses}
+                    shiftTime={hook.shiftTime}
                     wkLoad={wkLoad}
                     colWidth={COL_W}
                     todayWi={todayWi}
                     toggleExpand={toggleExpand}
                     addTask={addTask}
                     addCat={addCat}
-                    toggleWk={toggleWk}
+                    updTimeframe={updTimeframe}
                     cycleStatus={cycleStatus}
                     updAssignee={updAssignee}
                     setDrag={setDrag}
@@ -140,6 +155,10 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
                     hovWk={hovWk}
                     setHovWk={setHovWk}
                     TEAM_MEMBERS={TEAM_MEMBERS}
+                    emailStatusMap={emailStatusMap}
+                    updName={hook.updName}
+                    delTask={hook.delTask}
+                    timeScale={timeScale}
                 />
             </div>
 
@@ -152,30 +171,30 @@ const SmartSchedule: React.FC<{ navigate?: (path: string) => void }> = ({ naviga
           </div>
         )}
 
-        {/* Assignment Toast */}
-        {assignToast && (
-          <AssignmentNotifyToast
-            toast={assignToast}
-            sending={emailSending}
-            sent={emailSent}
-            onDismiss={() => { setAssignToast(null); setEmailSent(false); }}
-            onConfirm={async () => {
-              if (!assignToast) return;
-              setEmailSending(true);
-              const ok = await sendAssignmentEmail({
-                recipientName:  assignToast.memberName,
-                recipientEmail: assignToast.memberEmail,
-                taskName:       assignToast.taskName,
-                categoryName:   assignToast.catName,
-                siblingTasks:   assignToast.siblingNames,
-                projectLabel:   assignToast.projectLabel,
-              });
-              setEmailSending(false);
-              setEmailSent(ok);
-              if (ok) setTimeout(() => { setAssignToast(null); setEmailSent(false); }, 2000);
-            }}
-          />
-        )}
+        {/* NOTIFICATION TOASTS */}
+        <AnimatePresence>
+            {notification && (
+                <motion.div
+                    initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: 20, opacity: 0, scale: 0.95 }}
+                    className="fixed bottom-10 right-10 z-[100] bg-slate-900 border border-white/20 text-white px-8 py-5 rounded-[2.5rem] shadow-2xl backdrop-blur-xl flex items-center gap-6"
+                >
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${notification.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                        {notification.type === 'error' ? <AlertTriangle size={24} /> : <CheckCircle2 size={24} />}
+                    </div>
+                    <div className="flex flex-col">
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${notification.type === 'error' ? 'text-red-400/80' : 'text-emerald-400/80'}`}>
+                            {notification.title}
+                        </span>
+                        <p className="text-sm font-black text-white/90">{notification.message}</p>
+                    </div>
+                    <button onClick={() => setNotification(null)} className="ml-4 p-2 hover:bg-white/10 rounded-xl transition-colors">
+                        <Plus className="rotate-45 text-white/40" size={18} />
+                    </button>
+                </motion.div>
+            )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -68,7 +68,9 @@ export const ProjectContextBar: React.FC<ProjectContextBarProps> = ({
             {isLoading ? <Zap size={18} className="animate-spin" /> : (activeProject ? <CheckCircle2 size={18} /> : <Briefcase size={18} />)}
           </div>
           <div className="flex flex-col text-left overflow-hidden">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Proyecto en Pantalla</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
+              {activeProject ? `[${activeProject.id}] Proyecto Activo` : 'Proyecto en Pantalla'}
+            </span>
             <span className="text-sm font-black text-slate-900 tracking-tight truncate">
               {activeProject ? (activeProject.projectName || activeProject.address) : 'Seleccionar Proyecto...'}
             </span>
@@ -143,10 +145,10 @@ export const ProjectContextBar: React.FC<ProjectContextBarProps> = ({
                               {p.projectName || p.address}
                           </span>
                           <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{p.id}</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-200" />
-                              <span className="text-[10px] font-bold text-emerald-600/60 uppercase truncate">
-                                  {p.clientName || 'Sin Cliente'}
+                              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{p.id}</span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                              <span className="text-[10px] font-bold text-slate-400 truncate">
+                                  {p.address || 'Sin Ubicación'}
                               </span>
                           </div>
                         </div>

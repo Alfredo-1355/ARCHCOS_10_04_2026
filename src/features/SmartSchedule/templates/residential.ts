@@ -1,5 +1,5 @@
 import { Category, TaskRow, ProjectSchedule } from '../../../types/dashboard';
-import { uid, BAR_TYPES, buildWeeks } from '../utils';
+import { uid, buildWeeks } from '../utils/helpers';
 
 /**
  * Residential Master Template v1
@@ -25,11 +25,9 @@ export const getResidentialTemplate = (startDate: string): ProjectSchedule => {
             tasks: [
                 { id: uid(), name: 'Existing / Proposed Site Plan', type: 'critical', weeks: createWeeks(1, 2), progress: 0 },
                 { id: uid(), name: '1st & 2nd Floor Plan', type: 'critical', weeks: createWeeks(1, 2), progress: 0 },
-                { id: uid(), name: 'Exterior Renders', type: 'refinement', weeks: createWeeks(2, 2), progress: 0 },
                 { id: uid(), name: 'Proposed Facades (Option A)', type: 'critical', weeks: createWeeks(3, 4), progress: 0 },
                 { id: uid(), name: 'Proposed Roof Plan', type: 'critical', weeks: createWeeks(3, 3), progress: 0 },
                 { id: uid(), name: 'Proposed Cross Sections', type: 'refinement', weeks: createWeeks(4, 5), progress: 0 },
-                { id: uid(), name: 'Interior Renders', type: 'refinement', weeks: createWeeks(3, 4), progress: 0 },
                 { id: uid(), name: 'Life Safety & Fire Safety Plan', type: 'refinement', weeks: createWeeks(6, 7), progress: 0 },
                 { id: uid(), name: 'Accessibility Guidelines', type: 'refinement', weeks: createWeeks(6, 6), progress: 0 },
                 { id: uid(), name: 'Measurements Plan', type: 'refinement', weeks: createWeeks(6, 6), progress: 0 },
@@ -38,6 +36,17 @@ export const getResidentialTemplate = (startDate: string): ProjectSchedule => {
                 { id: uid(), name: 'Reflected Ceiling Plan', type: 'refinement', weeks: createWeeks(8, 9), progress: 0 },
                 { id: uid(), name: 'Interior Finish Plan', type: 'refinement', weeks: createWeeks(9, 10), progress: 0 },
                 { id: uid(), name: 'Building Floor Penetration Plan', type: 'refinement', weeks: createWeeks(9, 10), progress: 0 },
+            ]
+        },
+        {
+            id: 'cat_renders',
+            name: 'Renders',
+            color: '#EC4899',
+            icon: 'LayoutGrid',
+            expanded: true,
+            tasks: [
+                { id: uid(), name: 'Exterior Renders', type: 'refinement', weeks: createWeeks(2, 2), progress: 0 },
+                { id: uid(), name: 'Interior Renders', type: 'refinement', weeks: createWeeks(3, 4), progress: 0 },
             ]
         },
         {

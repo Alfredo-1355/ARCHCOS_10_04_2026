@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { BAR_TYPES, STATUS_CFG } from '../../utils';
+import { BAR_TYPES, STATUS_CFG } from '../../constants';
 import { TaskStatus } from '../../../../types/dashboard';
 
 interface GanttTaskBarProps {
@@ -12,6 +12,11 @@ interface GanttTaskBarProps {
   colWidth: number;
   assigneeInitials?: string;
   startDateLabel?: string;
+  timeScale?: 'weeks' | 'days';
+  lastDateLabel?: string;
+  onContextMenu?: (e: React.MouseEvent) => void;
+  onResizeLeft?: (e: React.MouseEvent) => void;
+  onResizeRight?: (e: React.MouseEvent) => void;
 }
 
 export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
@@ -21,7 +26,12 @@ export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
   status,
   colWidth,
   assigneeInitials,
-  startDateLabel
+  startDateLabel,
+  timeScale = 'weeks',
+  lastDateLabel,
+  onContextMenu,
+  onResizeLeft,
+  onResizeRight
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -58,15 +68,30 @@ export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setShowTooltip(false)}
+      onContextMenu={onContextMenu}
     >
       <motion.div 
         ref={barRef}
         layoutId={`bar-${taskId}`}
-        className={`relative ${isMilestone ? 'w-6 h-6 rotate-45 mx-auto' : 'h-10 w-full rounded-2xl'} shadow-xl border border-white/20 flex items-center justify-center transition-all group-hover/bar:scale-[1.1] group-hover/bar:brightness-110 active:scale-95 cursor-grab active:cursor-grabbing overflow-hidden`}
+        className={`relative ${isMilestone ? 'w-6 h-6 rotate-45 mx-auto' : 'h-10 w-full rounded-2xl'} shadow-xl border border-white/20 flex items-center justify-center transition-all group-hover/bar:scale-[1.05] group-hover/bar:brightness-110 active:scale-95 cursor-grab active:cursor-grabbing overflow-hidden`}
         style={{ 
-          backgroundColor: cfg.colorPv,
+          backgroundColor: cfg.color,
         }}
       >
+        {/* Resize Handles */}
+        {!isMilestone && duration > 0 && onResizeLeft && (
+            <div 
+                className="absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/40 active:bg-white/60 z-20 transition-colors"
+                onMouseDown={onResizeLeft}
+            />
+        )}
+        
+        {!isMilestone && duration > 0 && onResizeRight && (
+            <div 
+                className="absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/40 active:bg-white/60 z-20 transition-colors"
+                onMouseDown={onResizeRight}
+            />
+        )}
         {!isMilestone && (
             <div 
                 className="absolute left-0 top-0 bottom-0 w-1.5 opacity-80"
@@ -88,7 +113,7 @@ export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
                 </div>
 
                 <div className="flex-1 flex justify-center">
-                    <div className={`w-6 h-6 rounded-lg bg-white/20 border border-white/20 ${cfg.text} text-[10px] font-black flex items-center justify-center shadow-inner`}>
+                    <div className="w-6 h-6 rounded-lg bg-white/20 border border-white/20 text-white text-[10px] font-black flex items-center justify-center shadow-inner">
                         {assigneeInitials || '??'}
                     </div>
                 </div>
@@ -96,7 +121,7 @@ export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
                 {duration > 1 && (
                     <div className="flex-none flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-lg border border-white/10 mr-4">
                         <span className="text-[7px] font-black text-white/80 uppercase tracking-tighter tabular-nums whitespace-nowrap">
-                            S{lastWi + 1}
+                            {lastDateLabel || (timeScale === 'weeks' ? `S${lastWi + 1}` : (lastWi + 1).toString().padStart(2, '0'))}
                         </span>
                     </div>
                 )}
@@ -123,8 +148,8 @@ export const GanttTaskBar: React.FC<GanttTaskBarProps> = ({
                       <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: statusInfo?.color }} />
                   </div>
                   <div className="space-y-2">
-                      <TooltipItem label="Rango" value={`${startDateLabel || 'S' + (firstWi + 1)} → S${lastWi + 1}`} />
-                      <TooltipItem label="Duración" value={`${duration} ${duration === 1 ? 'Semana' : 'Semanas'}`} />
+                      <TooltipItem label="Rango" value={`${startDateLabel} → ${lastDateLabel}`} />
+                      <TooltipItem label="Duración" value={`${duration} ${timeScale === 'weeks' ? (duration === 1 ? 'Semana' : 'Semanas') : (duration === 1 ? 'Día' : 'Días')}`} />
                       <TooltipItem label="Estado" value={statusInfo?.label} color={statusInfo?.color} />
                   </div>
               </div>

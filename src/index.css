@@ -109,15 +109,27 @@ html, body {
 }
 
 /* ================================================
-   SCROLLBAR SUPPRESSION
-   `scrollbar-width` is Firefox/Chrome 121+ only. It degrades
-   gracefully to a visible (but functional) scrollbar in older browsers.
-   The ::-webkit-scrollbar pseudo covers Chrome/Safari/Edge.
+   ELEGANT SCROLLBARS (Phase 6)
    ================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 43, 60, 0.2); /* arch-text color with opacity */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 43, 60, 0.4);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE / Edge legacy */
-  scrollbar-width: none;     /* Firefox 64+ and Chrome 121+ */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

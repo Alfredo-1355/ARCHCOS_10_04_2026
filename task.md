@@ -1,5 +1,17 @@
 # Bitácora de Ejecución: Smart Schedule Maestro
 
+- [x] Create implementation plan
+- [x] Fix SmartSchedule.tsx structural corruption (JSX balancing)
+- [/] Align TaskRow and ProjectSchedule interfaces with data structure
+    - [x] Rename `blocks` -> `weeks`
+    - [x] Rename `baselineBlocks` -> `baselineWeeks`
+    - [/] Rename `assignee` -> `assigneeId` across components
+- [/] Fix missing imports and TypeScript errors
+    - [ ] Import `Week` type in SmartSchedule.tsx
+    - [ ] Fix `React` namespace in useSmartSchedule.ts
+    - [ ] Fix `undo` name error in AdvancedGanttChartWrapper.tsx
+- [ ] Verify data persistence to Firestore
+- [ ] Final verification with tsc
 - `[/]` Modificar `AdminDashboard.tsx` para inyectar la función de salvado `updateProject` al cronograma.
 - `[ ]` Base de Datos: Migrar `SmartScheduleView.tsx` para leer `project.smartSchedule` y crear un efecto `debounce` de autoguardado en Firebase.
 - `[ ]` Escala Temporal (UI): Agregar state `timeScale`, botón switch (Días/Semanas) y renderizado granular.

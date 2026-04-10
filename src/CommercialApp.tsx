@@ -829,11 +829,20 @@ function QuestionField({
         </div>
       );
     case 'Image Picker':
+      const STYLE_IMAGES: Record<string, string> = {
+        'Modern Industrial':    '/assets/styles/modern-industrial.png',
+        'Minimalist Corporate': '/assets/styles/minimalist-corporate.png',
+        'Warm & Organic':       '/assets/styles/warm-organic.png',
+        'Classic/Traditional':  '/assets/styles/classic-traditional.png',
+        'High-Tech':            '/assets/styles/high-tech.png',
+        'Transitional':         '/assets/styles/transicional.png',
+      };
       return (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {question.options?.map((opt) => {
             const optValue = typeof opt === 'string' ? opt : opt.value;
             const optLabel = typeof opt === 'string' ? opt : opt.label[currentLang];
+            const imgSrc = STYLE_IMAGES[optValue] || `/assets/styles/${optValue.replace(/[\s&/]+/g, '-').toLowerCase()}.png`;
             
             return (
               <button
@@ -846,12 +855,11 @@ function QuestionField({
                 }`}
               >
                 <img 
-                  src={`https://picsum.photos/seed/${optValue.replace(/\s+/g, '-').toLowerCase()}/800/1000`} 
+                  src={imgSrc} 
                   alt={optLabel}
-                  referrerPolicy="no-referrer"
-                  className={`w-full h-full object-cover transition-all duration-700 ${value === optValue ? 'scale-110' : 'group-hover:scale-105 grayscale-[0.5] group-hover:grayscale-0'}`}
+                  className={`w-full h-full object-cover transition-all duration-700 ${value === optValue ? 'scale-110' : 'group-hover:scale-105 grayscale-[0.3] group-hover:grayscale-0'}`}
                 />
-                <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ${value === optValue ? 'from-arch-blue-dark/80 via-transparent' : 'from-arch-ink/60 via-transparent opacity-0 group-hover:opacity-100'}`} />
+                <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ${value === optValue ? 'from-arch-blue-dark/80 via-transparent opacity-100' : 'from-arch-ink/70 via-transparent opacity-60 group-hover:opacity-100'}`} />
                 <div className="absolute bottom-6 left-6 right-6 text-left">
                   <span className={`text-[10px] font-black uppercase tracking-[0.2em] block mb-1 ${value === optValue ? 'text-arch-blue' : 'text-white/60'}`}>Style</span>
                   <span className="text-sm font-bold text-white leading-tight">{optLabel}</span>

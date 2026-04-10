@@ -49,6 +49,9 @@ export const INITIAL_PROJECTS: Project[] = [
       { name: 'Concepto_V1.pdf', type: 'PDF' },
       { name: 'Planta_Arquitectonica.dwg', type: 'DWG' },
     ],
+    totalArea: { value: 4500, unit: 'sqft' },
+    budget: { total: 850000, spent: 467500, currency: 'USD' },
+    estimatedCompletion: '2026-12-15',
   },
   {
     id: 'PRJ-1002',
@@ -71,6 +74,9 @@ export const INITIAL_PROJECTS: Project[] = [
     progress: 85,
     status: 'Ejecución de obra en fase de acabados finos y luminarias.',
     deliverables: [{ name: 'Plano_Instalaciones.pdf', type: 'PDF' }],
+    totalArea: { value: 1200, unit: 'm2' },
+    budget: { total: 2400000, spent: 1800000, currency: 'USD' },
+    estimatedCompletion: '2026-10-20',
   },
   {
     id: 'PRJ-1003',
@@ -93,6 +99,9 @@ export const INITIAL_PROJECTS: Project[] = [
     progress: 65,
     status: 'En revisión municipal de permisos de ocupación.',
     deliverables: [{ name: 'Memoria_Calculo.pdf', type: 'PDF' }],
+    totalArea: { value: 3200, unit: 'sqft' },
+    budget: { total: 350000, spent: 315000, currency: 'USD' },
+    estimatedCompletion: '2026-11-05',
   },
 ];
 
